@@ -33,7 +33,7 @@ export type Photo = { image: string; fallback: string; alt: string; caption?: st
 export type EventKey =
   | "bandlab" | "kaivalyadham" | "malvan" | "wildjam" | "myntra" | "bombay-presidency" | "welupt"
   | "power-pose" | "arangetram" | "aarey" | "tamarind" | "mumbai-machoo" | "saiyyara" | "bombba-bomb"
-  | "jevlis" | "spotify-rap91" | "radio" | "midday" | "ibc" | "tom-thum" | "colossal"
+  | "jevlis" | "spotify-rap91" | "radio" | "midday" | "ibc" | "tom-thum" | "colossal" | "vodcast" | "coaching"
   | "cypher" | "concert" | "portfolio";
 
 export type CategoryKey = "events" | "workshops" | "film-ads" | "hosting" | "media" | "competitions";
@@ -43,8 +43,8 @@ export type Category = { key: CategoryKey; title: string; blurb: string };
 export type Project = {
   key: EventKey;
   category: CategoryKey;
-  sort: string; // YYYY-MM, newest first on the timeline
-  date: string;
+  // Kept for reference only; the timeline no longer shows dates and follows the sheet's order.
+  date?: string;
   title: string;
   text: string;
   // Cover photo for the timeline; projects without one show a typographic tile until a photo is added.
@@ -69,6 +69,8 @@ export type GalleryItem = Photo & {
 // Instagram posts, embedded the same way as the Why Bother site.
 export type InstagramPost = { type: "p" | "reel" | "tv"; code: string };
 
+// Re-used when Drive photos come back as project covers.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const cover = (file: string, dir: string, n: number, alt: string): Photo => ({ image: src(file, dir), fallback: fb(n), alt });
 
 export const portfolioData = {
@@ -82,8 +84,8 @@ export const portfolioData = {
   pageMeta: "Sadhana Tawde | Beatboxer, Live Performer, Mentor",
   cover: {
     background: { image: src("cover-banner.jpg"), fallback: fb(1), alt: "Live stage and crowd" } satisfies Photo,
-    // Colour-graded portrait (maroon backdrop); the ungraded one until the new file is uploaded.
-    hero: { image: asset("hero-graded.jpg") ?? src("hero-clean.jpg"), fallback: fb(2), alt: "Sadhana Tawde, portrait" } satisfies Photo,
+    // Final studio portrait (2026-11-04); the earlier graded one until the new file is uploaded.
+    hero: { image: asset("hero-final.jpg") ?? asset("hero-graded.jpg") ?? src("hero-clean.jpg"), fallback: fb(2), alt: "Sadhana Tawde, portrait" } satisfies Photo,
   },
   about: {
     title: "Why Beatbox",
@@ -93,40 +95,44 @@ export const portfolioData = {
     ],
     background: { image: src("why-bg.jpg"), fallback: fb(3), alt: "Live performance on stage" } satisfies Photo,
   },
-  // Featured projects: categories and projects from the Excel sheet (Sheet1 "Type").
-  // The sheet's two management categories are merged into "Hosting & Event Management".
+  // Featured projects: the six sections of the sheet's "Flow of Featured Events page" tab, in its order.
+  // Keys are kept from earlier rounds so existing /projects/<key> links still work.
   projects: {
     title: "Featured Projects",
     categories: [
-      { key: "events", title: "Events & Showcases", blurb: "Live performances, showcases and guest appearances." },
-      { key: "workshops", title: "Workshops", blurb: "Teaching beatboxing to kids, adults and first-timers." },
-      { key: "film-ads", title: "Film, Ads & Features", blurb: "On screen, in commercials and alongside icons of the craft." },
-      { key: "hosting", title: "Hosting & Event Management", blurb: "Hosting stages and building events from the inside." },
-      { key: "media", title: "Interviews & Media", blurb: "Newspaper features and radio interviews." },
-      { key: "competitions", title: "Competitions", blurb: "Battles and championship titles." },
+      { key: "film-ads", title: "On-Screen & Commercial Credits", blurb: "On screen in film and in national commercial campaigns." },
+      { key: "competitions", title: "Awards & Championship Titles", blurb: "Battles and championship titles." },
+      { key: "events", title: "Major Live Performances & Collaborations", blurb: "Live sets, showcases and collaborations." },
+      { key: "hosting", title: "Hosting & Anchoring", blurb: "Hosting stages, shows and community events." },
+      { key: "media", title: "Press & Media Coverage", blurb: "Newspaper features and radio interviews." },
+      { key: "workshops", title: "Workshop & Mentorship", blurb: "Workshops, coaching, judging and community building." },
     ] satisfies Category[],
+    // Order, write-ups and videos follow the "Flow of Featured Events page" tab of the sheet (project-data\Details of Beatbox Performances.xlsx).
+    // No Drive photos for now (the Drive folders are being sorted); Instagram tiles come from gallery items with `instagram`.
     items: [
-      { key: "bandlab", category: "events", sort: "2026-10", date: "Oct 2026", title: "BandLab 'Pass the Aux'", text: "Performed live at BandLab's 'Pass the Aux' event.", cover: cover("g-bandlab-01.jpg", "gallery/", 4, "BandLab 'Pass the Aux' event"), shorts: ["5F54fzwUJMM"] },
-      { key: "kaivalyadham", category: "events", sort: "2026-09", date: "Sep 2026", title: "Kaivalyadham Jubilee", text: "Performed at the Kaivalyadham Jubilee celebrations, Lonavla.", cover: cover("g-kaivalyadham-01.jpg", "gallery/", 5, "Kaivalyadham Jubilee celebrations") },
-      { key: "wildjam", category: "events", sort: "2026-03", date: "Mar 2026", title: "Wildjam", text: "Performed at the event hosted by WildWildWomen.", cover: cover("g-wildjam-02.jpg", "gallery/", 7, "Wildjam event") },
-      { key: "bombay-presidency", category: "events", sort: "2026-01", date: "Jan 2026", title: "Bombay Presidency International School", text: "Invited as a judge for the ICSE school's \"Music from Scratch\" event.", cover: cover("g-bombay-01.jpg", "gallery/", 9, "Bombay Presidency International School event"), shorts: ["mJhVFu7ftNE", "oNd8OwgsdjQ"] },
-      { key: "power-pose", category: "events", sort: "2025-12", date: "Dec 2025", title: "Power Pose", text: "Performed at the event hosted by Women of Music.", cover: cover("power-pose-start.jpg", "videos/", 11, "Power Pose event hosted by Women of Music"), youtube: ["XwPxJRBWGYA"] },
-      { key: "arangetram", category: "events", sort: "2025-12", date: "Dec 2025", title: "Arangetram", text: "Performed a live jugalbandi of beatboxing and mridangam at a Bharatanatyam arangetram." },
-      { key: "mumbai-machoo", category: "events", sort: "2025-06", date: "Jun 2025", title: "Mumbai Machoo", text: "Hosted and performed at the event." },
-      { key: "bombba-bomb", category: "events", sort: "2025-05", date: "May 2025", title: "Bombba Bomb", text: "Performed as an artist showcase.", cover: cover("p-bombba-bomb-01.jpg", "numbered/", 2, "Bombba Bomb showcase") },
-      { key: "jevlis", category: "events", sort: "2025-04", date: "Apr 2025", title: "Jevlis Ka Diwas", text: "Performed at the event by World of Vibes, ft. Kratex & Peni Fena.", cover: cover("p-jevlis-00.jpg", "numbered/", 1, "Jevlis Ka Diwas") },
-      { key: "welupt", category: "events", sort: "2025-03", date: "Mar 2025", title: "Welupt Collective", text: "Performed at their pre-Women's Day celebration.", cover: cover("journey-welupt.jpg", "journey/", 10, "Welupt Collective pre-Women's Day celebration"), youtube: ["SznC7xxvqeo"] },
-      { key: "spotify-rap91", category: "events", sort: "2024-11", date: "Nov 2024", title: "Spotify Rap 91", text: "Performed with an all-girls crew and did a live jugalbandi with the DJ.", cover: cover("p-spotify-rap91-01.jpg", "numbered/", 4, "Spotify Rap 91 crew"), youtube: ["7FWgnEjy4eU"] },
-      { key: "malvan", category: "workshops", sort: "2026-04", date: "Apr 2026", title: "Malvan Beatboxing Workshop", text: "Conducted the first-ever beatboxing workshop in Malvan, Sindhudurg, with 45+ attendees aged 4 to 75. It was featured in multiple news articles across the district.", cover: cover("g-malvan-02.jpg", "gallery/", 6, "Malvan beatboxing workshop"), youtube: ["f-u8DhmLcFI"] },
-      { key: "tamarind", category: "workshops", sort: "2025-11", date: "Nov 2025", title: "Tamarind Tree Workshop", text: "Conducted a beatboxing workshop for kids at Tamarind Tree in Palghar." },
-      { key: "myntra", category: "film-ads", sort: "2026-02", date: "Feb 2026", title: "Myntra Ad", text: "Featured in a commercial with Nora Fatehi.", cover: cover("g-myntra-02.jpg", "gallery/", 8, "Myntra ad shoot"), youtube: ["faESXyOVxYA"], shorts: ["BNnys2LEw4Y"] },
-      { key: "saiyyara", category: "film-ads", sort: "2025-07", date: "Jul 2025", title: "Saiyyara (Film)", text: "Appeared on-screen during the song \"Humsafar\", which also features my beatboxing." },
-      { key: "tom-thum", category: "film-ads", sort: "2020-02", date: "Feb 2020", title: "Jammed with Tom Thum", text: "Had the opportunity to jam with the globally renowned beatboxer." },
-      { key: "aarey", category: "hosting", sort: "2025-12", date: "Dec 2025", title: "Aarey Music Festival", text: "Part of the organising team, and hosted and emceed the festival.", cover: cover("p-aarey-01.jpg", "numbered/", 3, "Aarey Music Festival") },
-      { key: "ibc", category: "hosting", sort: "2022-12", date: "Dec 2022", title: "Indian Beatbox Championship 2021", text: "Part of the organising team and served as the championship's Community Manager." },
-      { key: "radio", category: "media", sort: "2024-11", date: "2024 & 2025", title: "Radio Features", text: "Featured in multiple radio interviews." },
-      { key: "midday", category: "media", sort: "2024-09", date: "Sep & Nov 2024", title: "Mid-day", text: "Featured twice in the Mid-day newspaper for beatboxing." },
-      { key: "colossal", category: "competitions", sort: "2019-12", date: "Dec 2019", title: "Colossal 2019", text: "Won the Female Colossal Vice Champion title.", cover: cover("p-colossal-02.jpg", "numbered/", 5, "Colossal 2019 Vice Champion"), youtube: ["eR_yzFBKHxg", "bHcz0AhhOGU"] },
+      { key: "saiyyara", category: "film-ads", title: "Saiyyara (Film)", date: "Jul 2025", text: "Featured on screen in the song 'Humsafar' from Mohit Suri's Saiyaara alongside Ahan Pandey, with original beatbox integrated directly into the track's music.", youtube: ["D9DiMnlpFK8"] },
+      { key: "myntra", category: "film-ads", title: "Myntra Ad", date: "Feb 2026", text: "Featured in a national commercial campaign for Myntra alongside Nora Fatehi.", youtube: ["faESXyOVxYA"], shorts: ["BNnys2LEw4Y"] },
+      { key: "colossal", category: "competitions", title: "Colossal 2019", date: "Dec 2019", text: "Female Colossal Vice Champion (2019) — Secured Vice Champion at Colossal 2019, one of India's premier national beatboxing championships.", youtube: ["eR_yzFBKHxg", "bHcz0AhhOGU"] },
+      { key: "tom-thum", category: "events", title: "Jammed with Tom Thum", date: "Feb 2020", text: "Jammed with global beatboxing icon Tom Thum, famous for his pioneering vocal techniques and multi-instrumental sound effects." },
+      { key: "spotify-rap91", category: "events", title: "Spotify Rap 91", date: "Nov 2024", text: "Performed at Spotify's RAP 91 LIVE (2024) as part of an all-women crew—featuring four rappers, a DJ, and a beatboxer—highlighted by an energetic live jugalbandi between beatbox and DJing.", youtube: ["7FWgnEjy4eU"], shorts: ["h8WbXbTNAkM"] },
+      { key: "arangetram", category: "events", title: "Arangetram", date: "Dec 2025", text: "Performed a live jugalbandi combining beatbox with a traditional Vadya Vrinda ensemble (mridangam, flute, and violin) for a Bharatanatyam Arangetram.", youtube: ["NczgpjRy1IY"] },
+      { key: "power-pose", category: "events", title: "Power Pose", date: "Dec 2025", text: "Performed a live set at the Power Pose event, hosted by Women in Music India to highlight women artists in the music industry.", youtube: ["XwPxJRBWGYA"] },
+      { key: "bandlab", category: "events", title: "BandLab 'Pass the Aux'", date: "Oct 2026", text: "Performed a live beatbox set at BandLab's Pass the Aux showcase (October 2026).", shorts: ["5F54fzwUJMM"] },
+      { key: "jevlis", category: "events", title: "Jevlis Ka Diwas", date: "Apr 2025", text: "Performed a live beatbox set at World of Vibes' Jevlis Ka Diwas event, sharing the lineup with Kratex and FeniFina." },
+      { key: "kaivalyadham", category: "events", title: "Kaivalyadham Jubilee", text: "G.S. College of Yoga (Kaivalyadhama): Performed live for the Platinum Jubilee (75th Anniversary) celebrations of G.S. College of Yoga, Kaivalyadhama (Lonavala), delivering a vocal percussion performance for the institution’s milestone event." },
+      { key: "wildjam", category: "events", title: "Wildjam", date: "Mar 2026", text: "Performed a live beatbox set at Wildjam, an event hosted by India’s premier all-female hip-hop collective, WildWildWomen." },
+      { key: "welupt", category: "events", title: "Welupt Collective", date: "Mar 2025", text: "Featured live performer at Welupt Collective's pre-Women’s Day event in March 2025, celebrating women creators through live vocal percussion.", youtube: ["SznC7xxvqeo"] },
+      { key: "bombba-bomb", category: "events", title: "Bombba Bomb", date: "May 2025", text: "Featured artist performer at the Bombba Bomb showcase, delivering a live beatbox set at the underground platform dedicated to spotlighting raw independent music talent." },
+      { key: "aarey", category: "hosting", title: "Aarey Music Festival", date: "Dec 2025", text: "Co-organized and hosted/emceed the Aarey Music Festival—Mumbai’s first forest music festival celebrating ecology, indigenous arts, and live performance." },
+      { key: "vodcast", category: "hosting", title: "Street Hip-Hop Vodcast", text: "Host & Presenter (Street Hip-Hop Vodcast): Host for the Street Hip-Hop Vodcast, conducting video interviews and discussions focused on underground hip-hop culture, independent artists, and vocal percussion.", youtube: ["kIxfs4JCKq0"], shorts: ["UI7DLRhn0x4"] },
+      { key: "mumbai-machoo", category: "hosting", title: "Mumbai Machoo", date: "Jun 2025", text: "Hosted and delivered a live beatbox performance at Mumbai Machoo, driving the stage execution for the independent community showcase." },
+      { key: "midday", category: "media", title: "Mid-day", date: "Sep & Nov 2024", text: "Featured twice in Mid-Day newspaper highlighting live beatboxing in an experimental Didgeridoo fusion set and a community hip-hop cypher." },
+      { key: "radio", category: "media", title: "Radio Features", date: "2024 & 2025", text: "Featured across multiple radio stations in live interview segments, discussing beatboxing technique, vocal percussion, and independent music creation." },
+      { key: "malvan", category: "workshops", title: "Malvan Beatboxing Workshop", date: "Apr 2026", text: "Conducted the first-ever beatboxing workshop in Malvan (Sindhudurg), introducing vocal percussion to a Tier-3 regional community with 45+ participants aged 4 to 75; featured across multiple district news publications.", youtube: ["f-u8DhmLcFI"] },
+      { key: "coaching", category: "workshops", title: "1-on-1 Beatbox Coaching", text: "1-on-1 Beatbox Coaching: Offers customized private lessons for students across all age groups (including young learners starting from age 6), focusing on rhythm development, vocal techniques, and performance confidence." },
+      { key: "tamarind", category: "workshops", title: "Tamarind Tree Workshop", date: "Nov 2025", text: "Led an interactive beatboxing workshop for indigenous children at Tamarind Tree School in Palghar, introducing vocal percussion and creative rhythm building to young learners." },
+      { key: "bombay-presidency", category: "workshops", title: "Bombay Presidency International School", date: "Jan 2026", text: "Invited as an official judge for Bombay Presidency International School's (ICSE) \"Music from Scratch\" event, judging student musical showcases.", shorts: ["mJhVFu7ftNE", "oNd8OwgsdjQ"] },
+      { key: "ibc", category: "workshops", title: "Indian Beatbox Championship 2021", date: "Dec 2022", text: "Indian Beatbox Championship (2021): Core organizing team member and Community Manager, driving nationwide artist outreach, community engagement, and event logistics." },
     ] as Project[],
   },
   youtube: {
@@ -199,6 +205,7 @@ export const portfolioData = {
       { key: "saiyyara", label: "Saiyyara" },
       { key: "ibc", label: "Indian Beatbox Championship" },
       { key: "midday", label: "Mid-day" },
+      { key: "tom-thum", label: "Tom Thum" },
       { key: "portfolio", label: "Performance Portfolio" },
     ] as { key: EventKey | "all"; label: string }[],
     items: [
@@ -213,6 +220,12 @@ export const portfolioData = {
       { event: "ibc", image: src("ig-CmbwTEJIHxP.jpg", "instagram/"), fallback: fb(7), alt: "Indian Beatbox Championship team", caption: "Indian Beatbox Championship", instagram: { url: "https://www.instagram.com/p/CmbwTEJIHxP/" } },
       { event: "midday", image: src("ig-C_bjrLnKlBm.jpg", "instagram/"), fallback: fb(8), alt: "Mid-day feature on the cypher", caption: "Mid-day: Cypher", instagram: { url: "https://www.instagram.com/p/C_bjrLnKlBm/" } },
       { event: "midday", image: src("ig-DB3jkrgI3jV.jpg", "instagram/"), fallback: fb(9), alt: "Mid-day feature on Spotify Rap 91", caption: "Mid-day: Rapper Girls Rock", instagram: { url: "https://www.instagram.com/p/DB3jkrgI3jV/" } },
+      // Added 2026-11-04 from the "Flow of Featured Events page" tab.
+      { event: "midday", image: src("ig-DAjBzjQI5t8.jpg", "instagram/"), fallback: fb(10), alt: "Didgeridoo fusion set reel", caption: "Mid-day: Didgeridoo fusion", instagram: { url: "https://www.instagram.com/reel/DAjBzjQI5t8/", reel: true } },
+      { event: "tom-thum", image: src("ig-B80kVCLAPKB.jpg", "instagram/"), fallback: fb(11), alt: "Jamming with Tom Thum", caption: "Tom Thum", instagram: { url: "https://www.instagram.com/reel/B80kVCLAPKB/", reel: true } },
+      { event: "power-pose", image: src("ig-DSXU983jPuW.jpg", "instagram/"), fallback: fb(12), alt: "Power Pose, Women in Music India", caption: "Power Pose", instagram: { url: "https://www.instagram.com/p/DSXU983jPuW/" } },
+      { event: "jevlis", image: src("ig-DIbfdTSMT_K.jpg", "instagram/"), fallback: fb(1), alt: "Jevlis Ka Diwas performance", caption: "Jevlis Ka Diwas", instagram: { url: "https://www.instagram.com/p/DIbfdTSMT_K/" } },
+      { event: "wildjam", image: src("ig-DXHUR1CjJMl.jpg", "instagram/"), fallback: fb(2), alt: "Wildjam reel", caption: "Wildjam", instagram: { url: "https://www.instagram.com/reel/DXHUR1CjJMl/", reel: true } },
       // Numbered picks from the Drive folders in "Details of Beatbox Performances.xlsx" (first two photos per event; all for Spotify Rap 91 and Myntra).
       // BandLab 01, Welupt 01/02 and Malvan 01 are left out: they are the same photos as g-bandlab-01, g-welupt-03, journey-welupt and g-malvan-02.
       { event: "wildjam", image: src("p-wildjam-02.jpg", "numbered/"), fallback: fb(2), alt: "Wildjam with friends" },
@@ -278,15 +291,18 @@ export const portfolioData = {
 
 // Lookups shared by the pages.
 export const categoryOf = (key: string) => portfolioData.projects.categories.find(c => c.key === key);
-export const projectsIn = (key: CategoryKey) =>
-  portfolioData.projects.items.filter(p => p.category === key).sort((a, b) => b.sort.localeCompare(a.sort));
+// Projects in the order the sheet lists them.
+export const projectsIn = (key: CategoryKey) => portfolioData.projects.items.filter(p => p.category === key);
 export const galleryFor = (key: EventKey) => portfolioData.gallery.items.filter(i => i.event === key);
+// What the project pages and home shelves show: Instagram posts and reels only. Drive photos and Drive video
+// cards stay on the gallery page until the Drive folders are sorted.
+export const projectMedia = (key: EventKey) => galleryFor(key).filter(i => i.instagram);
 // Top-five slider items, in the order listed in gallery.top.
 export const topGallery = () =>
   portfolioData.gallery.top
     .map(file => portfolioData.gallery.items.find(i => i.image === src(file, "gallery/")))
     .filter((i): i is GalleryItem => !!i);
-// One preview per project for its category's shelf on the home page: the cover, else its first gallery photo.
-// Projects without a photo come back with no photo and show as a title tile.
+// One preview per project for its category's shelf on the home page: the cover, else its first Instagram tile.
+// Projects without one show as a title tile.
 export const shelfItems = (key: CategoryKey) =>
-  projectsIn(key).map(p => ({ key: p.key, title: p.title, photo: p.cover ?? galleryFor(p.key).find(i => !i.video) }));
+  projectsIn(key).map(p => ({ key: p.key, title: p.title, photo: p.cover ?? projectMedia(p.key)[0] }));

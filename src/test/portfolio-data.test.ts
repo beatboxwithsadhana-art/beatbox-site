@@ -1,18 +1,24 @@
 import { describe, expect, it } from 'vitest';
-import { portfolioData as data, projectsIn, topGallery } from '@/data/portfolioData';
+import { portfolioData as data, projectMedia, projectsIn, topGallery } from '@/data/portfolioData';
 
 describe('Sadhana portfolio content', () => {
-  it('groups all 21 projects from the sheet into six categories', () => {
-    expect(data.projects.categories.map(c => c.key)).toEqual(['events', 'workshops', 'film-ads', 'hosting', 'media', 'competitions']);
-    expect(data.projects.items).toHaveLength(21);
-    expect(new Set(data.projects.items.map(p => p.key)).size).toBe(21);
-    expect(data.projects.categories.map(c => projectsIn(c.key).length)).toEqual([11, 2, 3, 2, 2, 1]);
+  it('follows the six sections of the "Flow of Featured Events page" tab, in order', () => {
+    expect(data.projects.categories.map(c => c.title)).toEqual([
+      'On-Screen & Commercial Credits', 'Awards & Championship Titles', 'Major Live Performances & Collaborations',
+      'Hosting & Anchoring', 'Press & Media Coverage', 'Workshop & Mentorship',
+    ]);
+    expect(data.projects.items).toHaveLength(23);
+    expect(new Set(data.projects.items.map(p => p.key)).size).toBe(23);
+    expect(data.projects.categories.map(c => projectsIn(c.key).length)).toEqual([2, 1, 10, 3, 2, 5]);
+    expect(projectsIn('events').map(p => p.key)).toEqual([
+      'tom-thum', 'spotify-rap91', 'arangetram', 'power-pose', 'bandlab', 'jevlis', 'kaivalyadham', 'wildjam', 'welupt', 'bombba-bomb',
+    ]);
   });
 
-  it('orders each timeline newest first', () => {
-    for (const c of data.projects.categories) {
-      const sorts = projectsIn(c.key).map(p => p.sort);
-      expect(sorts).toEqual([...sorts].sort().reverse());
+  it('shows no Drive photos on the project pages for now', () => {
+    for (const p of data.projects.items) {
+      expect(p.cover).toBeUndefined();
+      expect(projectMedia(p.key).every(i => i.instagram)).toBe(true);
     }
   });
 

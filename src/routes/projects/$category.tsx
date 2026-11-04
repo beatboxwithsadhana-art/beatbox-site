@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from '@tanstack/react-router';
-import { categoryOf, galleryFor, portfolioData as data, projectsIn, type CategoryKey } from '@/data/portfolioData';
+import { categoryOf, portfolioData as data, projectMedia, projectsIn, type CategoryKey } from '@/data/portfolioData';
 import { BackLink, Footer, Img, MediaCell, Reveal } from '@/components/portfolio/ui';
 
 export const Route = createFileRoute('/projects/$category')({
@@ -20,7 +20,7 @@ export const Route = createFileRoute('/projects/$category')({
   component: CategoryPage,
 });
 
-// One category's projects on a vertical timeline: newest first, media and text swap sides each row.
+// One category's projects on a vertical timeline, in the sheet's order; media and text swap sides each row.
 function CategoryPage() {
   const { category } = Route.useLoaderData();
   const { only } = Route.useSearch();
@@ -46,8 +46,8 @@ function CategoryPage() {
           {items.map((p, idx) => {
             const showsCover = !p.youtube?.length && !p.shorts?.length && !!p.cover;
             const hasVideo = !!(p.youtube?.length || p.shorts?.length);
-            const media = galleryFor(p.key).filter(i => !showsCover || i.image !== p.cover?.image);
-            // No cover and no video: the first photo/post takes the large slot instead of the date tile.
+            const media = projectMedia(p.key).filter(i => !showsCover || i.image !== p.cover?.image);
+            // No cover and no video: the first post takes the large slot instead of the title tile.
             const lead = !hasVideo && !showsCover ? media[0] : undefined;
             const extra = lead ? media.slice(1) : media;
             return (
@@ -68,7 +68,7 @@ function CategoryPage() {
                   ) : lead ? (
                     <MediaCell item={lead} className="cell tl-cover tl-lead" />
                   ) : (
-                    <div className={`type-tile tl-cover ${idx % 2 ? 'bg-maroon' : 'bg-obsidian'}`} aria-hidden="true">{p.date}</div>
+                    <div className={`type-tile tl-cover ${idx % 2 ? 'bg-maroon' : 'bg-obsidian'}`} aria-hidden="true">{p.title}</div>
                   )}
                   {extra.length > 0 && (
                     <div className="tl-thumbs">
@@ -77,7 +77,6 @@ function CategoryPage() {
                   )}
                 </Reveal>
                 <Reveal className="tl-text">
-                  <p className="tl-date">{p.date}</p>
                   <h2 className="display">{p.title}</h2>
                   <p>{p.text}</p>
                   {p.links?.length ? (
