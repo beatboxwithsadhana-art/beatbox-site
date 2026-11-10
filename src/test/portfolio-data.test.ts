@@ -4,7 +4,7 @@ import { portfolioData as data, projectMedia, projectsIn, topGallery } from '@/d
 describe('Sadhana portfolio content', () => {
   it('follows the six sections of the "Flow of Featured Events page" tab, in order', () => {
     expect(data.projects.categories.map(c => c.title)).toEqual([
-      'On-Screen & Commercial Credits', 'Awards & Championship Titles', 'Major Live Performances & Collaborations',
+      'On-Screen & Commercial Credits', 'Awards & Championship Titles', 'Live Performances & Collabs',
       'Hosting & Anchoring', 'Press & Media Coverage', 'Workshop & Mentorship',
     ]);
     expect(data.projects.items).toHaveLength(23);
@@ -15,10 +15,9 @@ describe('Sadhana portfolio content', () => {
     ]);
   });
 
-  it('shows no Drive photos on the project pages for now', () => {
+  it('gives every event a hero photo for the wall', () => {
     for (const p of data.projects.items) {
-      expect(p.cover).toBeUndefined();
-      expect(projectMedia(p.key).every(i => i.instagram)).toBe(true);
+      expect(p.hero?.image).toBeTruthy();
     }
   });
 
@@ -30,7 +29,7 @@ describe('Sadhana portfolio content', () => {
   it('gives every photo a hosted asset or public path, plus a placeholder fallback', () => {
     const photos = [
       data.cover.background, data.cover.hero, data.about.background, data.contact.background,
-      ...data.projects.items.flatMap(p => (p.cover ? [p.cover] : [])), ...data.gallery.items,
+      ...data.gallery.items,
     ];
     for (const photo of photos) {
       // hosted Lovable asset (/__l5e/assets-v1/...) once uploaded, /images/... until then
@@ -39,15 +38,14 @@ describe('Sadhana portfolio content', () => {
     }
   });
 
-  it('shows five gallery items in the home slider', () => {
-    expect(topGallery()).toHaveLength(5);
+  it('shows only shortlisted photos and sheet posts in the gallery, with no video cards', () => {
+    expect(data.gallery.items.some(i => i.video)).toBe(false);
+    expect(data.gallery.items.every(i => !i.instagram)).toBe(true);
+    expect(data.gallery.items.every(i => i.ar)).toBe(true);
   });
 
-  it('links the eight supplied Drive videos and leaves the three unlinked ones empty', () => {
-    const videos = data.gallery.items.filter(i => i.video);
-    expect(videos).toHaveLength(11);
-    expect(videos.filter(i => i.video?.drive.startsWith('https://drive.google.com/file/d/'))).toHaveLength(8);
-    expect(videos.filter(i => i.video?.drive === '')).toHaveLength(3);
+  it('shows five gallery items in the home slider', () => {
+    expect(topGallery()).toHaveLength(5);
   });
 
   it('keeps only email and Instagram as contact routes', () => {

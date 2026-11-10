@@ -12,7 +12,7 @@
 
 ## How this repo relates to Lovable
 
-**Lovable is the source of truth.** This folder is a local copy of the code, pulled 2026-10-23 (after round 3), kept under git so changes have a history. Edits only go live after they are pushed to Lovable and published with the Lovable Site Builder skill:
+**Lovable is the source of truth.** This folder is a local copy of the code, last synced 2026-11-11 (round 5 + fixes, matches the live site), kept under git so changes have a history. Edits only go live after they are pushed to Lovable and published with the Lovable Site Builder skill:
 
 ```
 cd "D:\Apps\Website Builder\Lovable Site Builder\scripts"
