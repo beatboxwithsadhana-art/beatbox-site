@@ -38,7 +38,8 @@ export type EventKey =
 
 export type CategoryKey = "events" | "workshops" | "film-ads" | "hosting" | "media" | "competitions";
 
-export type Category = { key: CategoryKey; title: string; blurb: string; frame?: Photo };
+// `links`: external pages listed under the section's photo wall (opened in a new tab).
+export type Category = { key: CategoryKey; title: string; blurb: string; frame?: Photo; links?: { source: string; label: string; url: string }[] };
 
 export type Project = {
   key: EventKey;
@@ -102,7 +103,7 @@ export const portfolioData = {
     title: "Why Beatbox",
     paragraphs: [
       "Beatboxing, for me, is a form of expression, and I believe everyone has it in them. If you can hum, you are already beatboxing. I like to merge beatboxing with anything; even the slightest tempo will do. That's the magic of beatboxing—it can convert anything into music. You don't need any instruments; you are enough.",
-      "This curiosity led me to discover new sounds in beatboxing and become the first female beatboxer in Mumbai. I enjoy performing live, engaging my audience, and making them move to my beats. Apart from this, I have performed at Spotify Rap 91 and the Epic Fam Jam by Rolling Stone.",
+      "This curiosity led me to discover new sounds in beatboxing and become the first female beatboxer in Mumbai. I enjoy performing live, engaging my audience, and making them move to my beats.",
     ],
     background: { image: src("why-bg.jpg"), fallback: fb(3), alt: "Live performance on stage" } satisfies Photo,
   },
@@ -115,7 +116,11 @@ export const portfolioData = {
       { key: "competitions", title: "Awards & Championship Titles", blurb: "Battles and championship titles.", frame: { image: src("r5-colossal-hero.jpg", "round5/"), fallback: fb(2), alt: "" } },
       { key: "events", title: "Live Performances & Collabs", blurb: "Live sets, showcases and collaborations.", frame: { image: src("r5-bombba-bomb-hero.jpg", "round5/"), fallback: fb(3), alt: "" } },
       { key: "hosting", title: "Hosting & Anchoring", blurb: "Hosting stages, shows and community events.", frame: { image: src("r5-vodcast-hero.jpg", "round5/"), fallback: fb(4), alt: "" } },
-      { key: "media", title: "Press & Media Coverage", blurb: "Newspaper features and radio interviews.", frame: { image: src("r5-radio-hero.jpg", "round5/"), fallback: fb(5), alt: "" } },
+      { key: "media", title: "Press & Media Coverage", blurb: "Newspaper features and radio interviews.", frame: { image: src("r5-radio-hero.jpg", "round5/"), fallback: fb(5), alt: "" }, links: [
+        { source: "IMDb", label: "Sadhana Tawde on IMDb", url: "https://www.imdb.com/name/nm17691647/" },
+        { source: "Mid-day", label: "Six female rap artistes you need to know about in Mumbai", url: "https://www.mid-day.com/lifestyle/culture/photo/in-photos-six-female-rap-artistes-you-need-to-know-about-in-mumbai-102811/2" },
+        { source: "Mumbai Mirror", label: "Aarey's tribes take back the stage", url: "https://www.mumbaimirror.com/unwind/aareys-tribes-take-back-the-stage-700001" },
+      ] },
       { key: "workshops", title: "Workshop & Mentorship", blurb: "Workshops, coaching, judging and community building.", frame: { image: src("r5-malvan-01.jpg", "round5/"), fallback: fb(6), alt: "" } },
     ] satisfies Category[],
     // Order, write-ups and videos follow the "Flow of Featured Events page" tab of the sheet (project-data\Details of Beatbox Performances.xlsx).
@@ -126,7 +131,7 @@ export const portfolioData = {
       { key: "colossal", category: "competitions", title: "Colossal 2019", date: "Dec 2019", text: "Female Colossal Vice Champion (2019) — Secured Vice Champion at Colossal 2019, one of India's premier national beatboxing championships.", youtube: ["eR_yzFBKHxg", "bHcz0AhhOGU"], hero: v("r5-colossal-hero.jpg", "Colossal 2019"), photos: [v("r5-colossal-01.jpg", "Colossal 2019"), v("r5-colossal-02.jpg", "Colossal 2019"), v("r5-colossal-03.jpg", "Colossal 2019")] },
       { key: "tom-thum", category: "events", title: "Jammed with Tom Thum", date: "Feb 2020", text: "Jammed with global beatboxing icon Tom Thum, famous for his pioneering vocal techniques and multi-instrumental sound effects.", hero: v("r5-tom-thum-hero.jpg", "Jammed with Tom Thum"), photos: [v("r5-tom-thum-01.jpg", "Jammed with Tom Thum"), v("r5-tom-thum-02.jpg", "Jammed with Tom Thum"), v("r5-tom-thum-03.jpg", "Jammed with Tom Thum")] },
       { key: "spotify-rap91", videoLast: true, category: "events", title: "Spotify Rap 91", date: "Nov 2024", text: "Performed at Spotify's RAP 91 LIVE (2024) as part of an all-women crew—featuring four rappers, a DJ, and a beatboxer—highlighted by an energetic live jugalbandi between beatbox and DJing.", youtube: ["7FWgnEjy4eU"], shorts: ["h8WbXbTNAkM"], hero: v("r5-spotify-rap91-hero.jpg", "Spotify Rap 91"), photos: [v("r5-spotify-rap91-01.jpg", "Spotify Rap 91"), v("r5-spotify-rap91-02.jpg", "Spotify Rap 91"), v("r5-spotify-rap91-03.jpg", "Spotify Rap 91"), v("r5-spotify-rap91-04.jpg", "Spotify Rap 91")] },
-      { key: "arangetram", category: "events", title: "Arangetram", date: "Dec 2025", text: "Performed a live jugalbandi combining beatbox with a traditional Vadya Vrinda ensemble (mridangam, flute, and violin) for a Bharatanatyam Arangetram.", youtube: ["NczgpjRy1IY"], hero: yt("NczgpjRy1IY", "Arangetram") },
+      { key: "arangetram", category: "events", title: "Arangetram", date: "Dec 2025", text: "Performed a live jugalbandi combining beatbox with a traditional Vadya Vrinda ensemble (mridangam, flute, and violin) for a Bharatanatyam Arangetram.", youtube: ["NczgpjRy1IY"], shorts: ["iou_aNac23E"], hero: yt("NczgpjRy1IY", "Arangetram") },
       { key: "power-pose", category: "events", title: "Power Pose", date: "Dec 2025", text: "Performed a live set at the Power Pose event, hosted by Women in Music India to highlight women artists in the music industry.", youtube: ["XwPxJRBWGYA"], hero: { image: src("ig-DSXU983jPuW.jpg", "instagram/"), fallback: fb(1), alt: "Power Pose" } },
       { key: "bandlab", category: "events", title: "BandLab 'Pass the Aux'", date: "Oct 2026", text: "Performed a live beatbox set at BandLab's Pass the Aux showcase (October 2026).", shorts: ["5F54fzwUJMM"], hero: v("r5-bandlab-hero.jpg", "BandLab 'Pass the Aux'") },
       { key: "jevlis", category: "events", title: "Jevlis Ka Diwas", date: "Apr 2025", text: "Performed a live beatbox set at World of Vibes' Jevlis Ka Diwas event, sharing the lineup with Kratex and FeniFina.", hero: v("r5-jevlis-hero.jpg", "Jevlis Ka Diwas"), photos: [v("r5-jevlis-01.jpg", "Jevlis Ka Diwas"), v("r5-jevlis-02.jpg", "Jevlis Ka Diwas"), v("r5-jevlis-03.jpg", "Jevlis Ka Diwas")] },
@@ -179,7 +184,6 @@ export const portfolioData = {
       { type: "reel", code: "DXHUR1CjJMl" },
       { type: "p", code: "DVGbkR3DKaG" },
       { type: "reel", code: "DQYcL3iCFPY" },
-      { type: "reel", code: "DKZidiYSyCS" },
       { type: "reel", code: "DR8_ZAnDNkc" },
       { type: "reel", code: "DCHFmqMIJWR" },
       { type: "reel", code: "DAjBzjQI5t8" },
@@ -208,7 +212,7 @@ export const portfolioData = {
   gallery: {
     title: "Gallery",
     // The home-page slider shows these five first, then "See More" leads to /gallery.
-    top: ["r5-spotify-rap91-hero.jpg", "r5-colossal-hero.jpg", "r5-malvan-hero.jpg", "r5-welupt-hero.jpg", "r5-saiyaara-hero.jpg"],
+    top: ["r5-welupt-slider.jpg", "r5-spotify-rap91-02.jpg", "r5-colossal-hero.jpg", "r5-malvan-hero.jpg", "r5-saiyaara-hero.jpg"],
     // Only the shortlisted project photos (no Instagram tiles, so nothing leaves the site). `ar` keeps each photo uncropped.
     filters: [
       { key: "all", label: "All" },
@@ -244,6 +248,7 @@ export const portfolioData = {
       { event: "kaivalyadham", image: src("r5-kaivalyadham-hero.jpg", "round5/"), fallback: fb(1), alt: "G.S. College of Yoga (Kaivalyadhama)", ar: 1.778 },
       { event: "wildjam", image: src("r5-wildjam-hero.jpg", "round5/"), fallback: fb(1), alt: "Wildjam", ar: 1.501 },
       { event: "welupt", image: src("r5-welupt-hero.jpg", "round5/"), fallback: fb(1), alt: "Welupt Collective", ar: 1.332 },
+      { event: "welupt", image: src("r5-welupt-slider.jpg", "round5/"), fallback: fb(1), alt: "Welupt Collective", ar: 1.333 },
       { event: "bombba-bomb", image: src("r5-bombba-bomb-hero.jpg", "round5/"), fallback: fb(1), alt: "Bombba Bomb", ar: 1.501 },
       { event: "aarey", image: src("r5-aarey-hero.jpg", "round5/"), fallback: fb(1), alt: "Aarey Music Festival", ar: 1.333 },
       { event: "vodcast", image: src("r5-vodcast-hero.jpg", "round5/"), fallback: fb(1), alt: "Street Hip-Hop Vodcast", ar: 1.852 },
@@ -274,7 +279,8 @@ export const portfolioData = {
       { event: "kaivalyadham", image: src("r5-kaivalyadham-02.jpg", "round5/"), fallback: fb(1), alt: "G.S. College of Yoga (Kaivalyadhama)", ar: 0.563 },
       { event: "wildjam", image: src("r5-wildjam-01.jpg", "round5/"), fallback: fb(1), alt: "Wildjam", ar: 0.563 },
       { event: "wildjam", image: src("r5-wildjam-02.jpg", "round5/"), fallback: fb(1), alt: "Wildjam", ar: 0.563 },
-      { event: "wildjam", image: src("r5-wildjam-03.jpg", "round5/"), fallback: fb(1), alt: "Wildjam", ar: 1.778 },
+      { event: "wildjam", image: src("r6-slot41.jpg", "round6/"), fallback: fb(1), alt: "Wildjam", ar: 0.563 },
+      { event: "wildjam", image: src("r6-extra.jpg", "round6/"), fallback: fb(1), alt: "Wildjam", ar: 0.563 },
       { event: "wildjam", image: src("r5-wildjam-04.jpg", "round5/"), fallback: fb(1), alt: "Wildjam", ar: 0.563 },
       { event: "welupt", image: src("r5-welupt-01.jpg", "round5/"), fallback: fb(1), alt: "Welupt Collective", ar: 1.333 },
       { event: "welupt", image: src("r5-welupt-02.jpg", "round5/"), fallback: fb(1), alt: "Welupt Collective", ar: 1.333 },
@@ -289,7 +295,7 @@ export const portfolioData = {
       { event: "vodcast", image: src("r5-vodcast-04.jpg", "round5/"), fallback: fb(1), alt: "Street Hip-Hop Vodcast", ar: 2.046 },
       { event: "radio", image: src("r5-radio-01.jpg", "round5/"), fallback: fb(1), alt: "Radio Features", ar: 0.901 },
       { event: "malvan", image: src("r5-malvan-01.jpg", "round5/"), fallback: fb(1), alt: "Malvan Beatboxing Workshop", ar: 1.778 },
-      { event: "malvan", image: src("r5-malvan-02.jpg", "round5/"), fallback: fb(1), alt: "Malvan Beatboxing Workshop", ar: 0.75 },
+      { event: "malvan", image: src("r6-slot56.jpg", "round6/"), fallback: fb(1), alt: "Malvan Beatboxing Workshop", ar: 0.75 },
       { event: "malvan", image: src("r5-malvan-03.jpg", "round5/"), fallback: fb(1), alt: "Malvan Beatboxing Workshop", ar: 1.776 },
       { event: "malvan", image: src("r5-malvan-04.jpg", "round5/"), fallback: fb(1), alt: "Malvan Beatboxing Workshop", ar: 0.558 },
       { event: "malvan", image: src("r5-malvan-05.jpg", "round5/"), fallback: fb(1), alt: "Malvan Beatboxing Workshop", ar: 1.485 },

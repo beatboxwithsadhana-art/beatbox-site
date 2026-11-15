@@ -62,6 +62,22 @@ function CategoryPage() {
           </Link>
         ))}
       </div>
+      {category.links && category.links.length > 0 && (
+        <section className="wall-links" aria-label="Read more">
+          <h2 className="display">Read more</h2>
+          <ul>
+            {category.links.map(l => (
+              <li key={l.url}>
+                <a href={l.url} target="_blank" rel="noopener noreferrer">
+                  <span className="wl-source">{l.source}</span>
+                  <span className="wl-label">{l.label}</span>
+                  <span className="wl-arrow" aria-hidden="true">↗</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
       <Footer />
       {open && <EventView key={open.key} project={open} list={items} categoryKey={category.key} categoryTitle={category.title} only={only} />}
     </main>

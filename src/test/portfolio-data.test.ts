@@ -22,8 +22,8 @@ describe('Sadhana portfolio content', () => {
   });
 
   it('embeds the 15 Instagram posts that were supplied', () => {
-    expect(data.instagram.posts).toHaveLength(15);
-    expect(new Set(data.instagram.posts.map(p => p.code)).size).toBe(15);
+    expect(data.instagram.posts).toHaveLength(14);
+    expect(new Set(data.instagram.posts.map(p => p.code)).size).toBe(14);
   });
 
   it('gives every photo a hosted asset or public path, plus a placeholder fallback', () => {
